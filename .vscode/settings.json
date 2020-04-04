@@ -1,0 +1,10 @@
+{
+    "editor.autoIndent": "none",
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact"
+    },
+    "emmet.syntaxProfiles": {
+        "javascript": "html"
+    },
+    "emmet.triggerExpansionOnTab": true
+}
