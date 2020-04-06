@@ -1,5 +1,6 @@
-import React from 'react';
+import React,{Component} from 'react';
 import Square from './square';
+import calculateWinner from '../helper';
 const style = {
     border: '1px solid darkblue',
     height: '300px',
@@ -9,17 +10,41 @@ const style = {
     borderRadius: '4px',
     gridTemplate: 'repeat(3, 1fr) / repeat(3, 1fr)'
 };
-const board = ({value, onClick})=> (
-    <div style={style}>
-        <Square value="11" onClick={ () =>{ console.log("1"); }}/>
-        <Square value="22" onClick={ () =>{ console.log("2"); }}/>
-        <Square value="33" onClick={ () =>{ console.log("3"); }}/>
-        <Square value="44" onClick={ () =>{ console.log("4"); }}/>
-        <Square value="55" onClick={ () =>{ console.log("5"); }}/>
-        <Square value="66" onClick={ () =>{ console.log("6"); }}/>
-        <Square value="77" onClick={ () =>{ console.log("7"); }}/>
-        <Square value="88" onClick={ () =>{ console.log("8"); }}/>
-        <Square value="99" onClick={ () =>{ console.log("9"); }}/>
-    </div>
-);
+class board extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            squares: Array(9).fill(null),
+            xIsNext: true
+        }
+    }
+    handleClick(i){
+        const squares = this.state.squares.slice();
+        squares[i] = this.state.xIsNext ? 'X': '0';
+        this.setState({squares:squares});
+        this.setState({xIsNext:!this.state.xIsNext});
+    }
+    renderSquare(i){
+        return <Square key={i} value={this.state.squares[i]} onClick={() => this.handleClick(i)}/>
+    }
+    render() {
+        const winner = calculateWinner(this.state.squares);
+        let status;
+        if(winner)  {
+            status = "Winner is: " + winner;
+        } else {
+            status = "Next player: " + (this.state.xIsNext ? 'X' : '0');
+        }    
+        return (
+            <div>
+                <div className="board-row" style={style} >
+                    {this.state.squares.map((square,index) => (
+                        this.renderSquare(index)
+                    ))}
+                </div>
+                <div className="status">{status}</div>
+            </div>
+        )
+    }
+}
 export default board;
